@@ -195,6 +195,7 @@ def build(ctx):
             ( "osdep/macos/mpv_helper.swift" ),
             ( "osdep/macos/swift_extensions.swift" ),
             ( "osdep/macos/swift_compat.swift" ),
+            ( "osdep/macos/precise_timer.swift" ),
             ( "osdep/macos/remote_command_center.swift", "macos-media-player" ),
             ( "video/out/mac/common.swift" ),
             ( "video/out/mac/view.swift" ),
