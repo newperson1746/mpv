@@ -203,9 +203,8 @@ def build(ctx):
             ( "video/out/mac/title_bar.swift" ),
             ( "video/out/cocoa_cb_common.swift", "macos-cocoa-cb" ),
             ( "video/out/mac/gl_layer.swift", "macos-cocoa-cb" ),
-            #molten swift
-            ( "video/out/mac/metal_layer.swift" ),
-            ( "video/out/mac_common.swift" ),
+            ( "video/out/mac_common.swift", "vulkan && cocoa" ),
+            ( "video/out/mac/metal_layer.swift", "vulkan && cocoa" ),
         ]
 
         ctx(
