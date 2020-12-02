@@ -202,6 +202,9 @@ def build(ctx):
             ( "video/out/mac/title_bar.swift" ),
             ( "video/out/cocoa_cb_common.swift", "macos-cocoa-cb" ),
             ( "video/out/mac/gl_layer.swift", "macos-cocoa-cb" ),
+            #molten swift
+            ( "video/out/mac/metal_layer.swift" ),
+            ( "video/out/mac_common.swift" ),
         ]
 
         ctx(
@@ -548,6 +551,7 @@ def build(ctx):
         ( "video/out/vulkan/context_wayland.c",  "vulkan && wayland" ),
         ( "video/out/vulkan/context_win.c",      "vulkan && win32-desktop" ),
         ( "video/out/vulkan/context_xlib.c",     "vulkan && x11" ),
+        ( "video/out/vulkan/context_mac.m",      "vulkan && cocoa" ),
         ( "video/out/vulkan/utils.c",            "vulkan" ),
         ( "video/out/w32_common.c",              "win32-desktop" ),
         ( "generated/wayland/single-pixel-buffer-v1.c", "wayland-protocols-1-27" ),
