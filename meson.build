@@ -411,7 +411,7 @@ endif
 if darwin
     path_source = files('osdep/path-darwin.c')
     sources += path_source + files('osdep/timer-darwin.c')
-                     
+
 endif
 
 if posix and not darwin
@@ -1354,7 +1354,7 @@ endif
 ios_gl = cc.has_header_symbol('OpenGLES/ES3/glext.h', 'GL_RGB32F', required: get_option('ios-gl'))
 features += {'ios-gl': ios_gl}
 if features['ios-gl']
-    sources += files('video/out/opengl/hwdec_ios.m')
+    sources += files('video/out/hwdec/hwdec_ios_gl.m')
 endif
 
 rpi_mmal_opt = get_option('rpi-mmal').require(
@@ -1450,8 +1450,12 @@ videotoolbox_gl = get_option('videotoolbox-gl').require(
     error_message: 'gl-cocoa nor ios-gl could be found!',
 )
 features += {'videotoolbox-gl': videotoolbox_gl.allowed()}
+features += {'videotoolbox-pl': videotoolbox_gl.allowed() and libplacebo.found()}
 if features['videotoolbox-gl']
-    sources += files('video/out/opengl/hwdec_osx.c')
+    sources += files('video/out/hwdec/hwdec_mac_gl.c', 'video/out/hwdec/hwdec_vt.c')
+endif
+if features['videotoolbox-pl']
+    sources += files('video/out/hwdec/hwdec_vt_pl.m')
 endif
 
 

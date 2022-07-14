@@ -43,7 +43,7 @@ const struct ra_hwdec_driver *const ra_hwdec_drivers[] = {
 #if HAVE_VAAPI_EGL || HAVE_VAAPI_LIBPLACEBO
     &ra_hwdec_vaapi,
 #endif
-#if HAVE_VIDEOTOOLBOX_GL || HAVE_IOS_GL
+#if HAVE_VIDEOTOOLBOX_GL || HAVE_IOS_GL || (HAVE_COCOA && HAVE_VULKAN)
     &ra_hwdec_videotoolbox,
 #endif
 #if HAVE_D3D_HWACCEL
