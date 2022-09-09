@@ -42,8 +42,7 @@ class MPVHelper {
         self.vo = vo
         self.log = log
 
-        guard let app = NSApp as? Application,
-              let cache = m_config_cache_alloc(vo, vo.pointee.global, app.getVoSubConf()) else
+        guard let cache = m_config_cache_alloc(vo, vo.pointee.global, Application.getVoSubConf()) else
         {
             log.sendError("NSApp couldn't be retrieved")
             exit(1)
@@ -54,7 +53,7 @@ class MPVHelper {
 
         guard let macCache = m_config_cache_alloc(vo,
                                                   vo.pointee.global,
-                                                  app.getMacOSConf()) else
+                                                  Application.getMacOSConf()) else
         {
             // will never be hit, mp_get_config_group asserts for invalid groups
             exit(1)

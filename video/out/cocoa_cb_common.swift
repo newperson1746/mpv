@@ -73,11 +73,22 @@ class CocoaCB: Common {
     }
 
     func initBackend(_ vo: UnsafeMutablePointer<vo>) {
-        let previousActiveApp = getActiveApp()
-        initApp()
-        initWindow(vo, previousActiveApp)
-        updateICCProfile()
-        initWindowState()
+        if (mpv?.opts.WinID ?? -1) != -1 {
+            guard let view = self.view else {
+                log.sendError("Something went wrong, no View was initialized")
+                exit(1)
+            }
+
+            let cView: View = unsafeBitCast(mpv!.opts.WinID, to: View.self)
+            cView.addSubview(view)
+            view.frame = cView.frame
+        } else {
+            let previousActiveApp = getActiveApp()
+            initApp()
+            initWindow(vo, previousActiveApp)
+            updateICCProfile()
+            initWindowState()
+        }
 
         backendState = .initialized
     }

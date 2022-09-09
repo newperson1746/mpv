@@ -34,10 +34,9 @@ class LibmpvHelper {
         mpvHandle = mpv
         log = LogHelper(mpLog)
 
-        guard let app = NSApp as? Application,
-              let ptr = mp_get_config_group(nil,
+        guard let ptr = mp_get_config_group(nil,
                                             mp_client_get_global(mpvHandle),
-                                            app.getMacOSConf()) else
+                                            Application.getMacOSConf()) else
         {
             log.sendError("macOS config group couldn't be retrieved'")
             exit(1)

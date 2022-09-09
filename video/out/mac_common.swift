@@ -42,27 +42,48 @@ class MacCommon: Common {
         mpv?.vo = vo
 
         DispatchQueue.main.sync {
-            let previousActiveApp = getActiveApp()
-            initApp()
-
-            let (_, _, wr) = getInitProperties(vo)
-
             guard let layer = self.layer else {
                 log.sendError("Something went wrong, no MetalLayer was initialized")
                 exit(1)
             }
 
-            if window == nil {
-                initView(vo, layer)
-                initWindow(vo, previousActiveApp)
-                initWindowState()
+
+            if (mpv?.opts.WinID ?? -1) != -1 {
+                if view == nil {
+                    let cView: View = unsafeBitCast(mpv!.opts.WinID, to: View.self)
+
+                    view = View(frame: cView.frame, common: self)
+                    guard let view = self.view else {
+                        log.sendError("Something went wrong, no View was initialized")
+                        exit(1)
+                    }
+
+                    view.layer = layer
+                    view.wantsLayer = true
+                    view.layerContentsPlacement = .scaleProportionallyToFit
+
+                    cView.addSubview(view)
+                    view.frame = cView.frame
+                }
+            } else {
+                let previousActiveApp = getActiveApp()
+                initApp()
+
+                let (_, _, wr) = getInitProperties(vo)
+
+                if window == nil {
+                    initView(vo, layer)
+                    initWindow(vo, previousActiveApp)
+                    initWindowState()
+                }
+
+                if !NSEqualSizes(window?.unfsContentFramePixel.size ?? NSZeroSize, wr.size) {
+                    window?.updateSize(wr.size)
+                }
+
+                windowDidResize()
             }
 
-            if !NSEqualSizes(window?.unfsContentFramePixel.size ?? NSZeroSize, wr.size) {
-                window?.updateSize(wr.size)
-            }
-
-            windowDidResize()
             needsICCUpdate = true
         }
 
