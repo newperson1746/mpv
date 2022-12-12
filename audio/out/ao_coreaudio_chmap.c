@@ -64,6 +64,14 @@ int ca_label_to_mp_speaker_id(AudioChannelLabel label)
     return -1;
 }
 
+AudioChannelLabel mp_speaker_id_to_ca_label(int id)
+{
+    for (int i = 0; speaker_map[i][1] >= 0; i++)
+        if (speaker_map[i][1] == id)
+            return (AudioChannelLabel)speaker_map[i][0];
+    return kAudioChannelLabel_Unknown;
+}
+
 #if HAVE_COREAUDIO
 static void ca_log_layout(struct ao *ao, int l, AudioChannelLayout *layout)
 {
