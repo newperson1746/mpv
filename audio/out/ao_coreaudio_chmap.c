@@ -72,7 +72,6 @@ AudioChannelLabel mp_speaker_id_to_ca_label(int id)
     return kAudioChannelLabel_Unknown;
 }
 
-#if HAVE_COREAUDIO
 static void ca_log_layout(struct ao *ao, int l, AudioChannelLayout *layout)
 {
     if (!mp_msg_test(ao->log, l))
@@ -99,6 +98,40 @@ static void ca_log_layout(struct ao *ao, int l, AudioChannelLayout *layout)
     }
 }
 
+AudioChannelLayout *ca_layout_get(struct ao *ao, size_t *size, const struct mp_chmap* chmap)
+{
+    *size = sizeof(AudioChannelLayout) + (MPMAX(ao->channels.num, 1) - 1) * sizeof(AudioChannelDescription);
+
+    MP_VERBOSE(ao, "input mp chmap: %s\n", mp_chmap_to_str(chmap));
+
+    AudioChannelLayout *layout = talloc_zero_size(NULL, *size);
+    if (!layout)
+        return NULL;
+
+    layout->mChannelLayoutTag = kAudioChannelLayoutTag_UseChannelDescriptions;
+    layout->mNumberChannelDescriptions = chmap->num;
+
+    for (uint8_t n = 0; n < chmap->num; n++) {
+        int speaker = chmap->speaker[n];
+        AudioChannelLabel label = mp_speaker_id_to_ca_label(speaker);
+        if (label == kAudioChannelLabel_Unknown) {
+            MP_VERBOSE(ao, "channel id=%d unusable to build channel list,"
+                           "skipping layout\n", speaker);
+            goto coreaudio_error;
+        }
+        layout->mChannelDescriptions[n].mChannelLabel = label;
+    }
+
+    MP_VERBOSE(ao, "output channel layout:\n");
+    ca_log_layout(ao, MSGL_V, layout);
+
+    return layout;
+coreaudio_error:
+    talloc_free(layout);
+    return NULL;
+}
+
+#if HAVE_COREAUDIO
 static AudioChannelLayout *ca_layout_to_custom_layout(struct ao *ao,
                                                       void *talloc_ctx,
                                                       AudioChannelLayout *l)
