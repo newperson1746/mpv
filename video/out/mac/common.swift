@@ -580,6 +580,7 @@ class Common: NSObject {
             let scaleFactor = data!.assumingMemoryBound(to: CDouble.self)
             let screen = getCurrentScreen()
             let factor = window?.backingScaleFactor ??
+                         view?.window?.backingScaleFactor ??
                          screen?.backingScaleFactor ?? 1.0
             scaleFactor.pointee = Double(factor)
             return VO_TRUE
