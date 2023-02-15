@@ -11,6 +11,8 @@ project('mpv',
         ]
 )
 
+has_objc = add_languages('objc', required: false)
+
 build_root = meson.project_build_root()
 source_root = meson.project_source_root()
 python = find_program('python3')
@@ -250,6 +252,7 @@ sources = files(
 
 # compiler stuff
 cc = meson.get_compiler('c')
+objcc = has_objc ? meson.get_compiler('objc') : false
 
 flags = ['-D_ISOC99_SOURCE', '-D_GNU_SOURCE',
          '-D_FILE_OFFSET_BITS=64']
