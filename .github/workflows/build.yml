@@ -19,7 +19,6 @@ jobs:
         cc:
           - "clang"
         os:
-          - "macos-11"
           - "macos-12"
     steps:
       - uses: actions/checkout@v3
